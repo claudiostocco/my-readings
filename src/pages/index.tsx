@@ -1,4 +1,4 @@
-import { Button, Flex, Stack } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -38,6 +38,10 @@ export default function SignIn() {
     }
   }
 
+  const handleNewClock = () => {
+    router.push('/newClock');
+  }
+
   return (
     <Flex
       w="100vw"
@@ -45,30 +49,52 @@ export default function SignIn() {
       align="Center"
       justify="Center"
     >
-      <Flex
-        as="form"
-        w="100%"
-        maxW={360}
-        bg="gray.800"
-        p="8"
-        borderRadius={8}
-        flexDir="column"
-        onSubmit={handleSubmit(handleSignIn)}
-      >
-        <Stack spacing="4">
-          <Input name="email" type="email" label="E-mail" error={errors.email} {...register('email')} />
-          <Input name="password" type="password" label="Senha" error={errors.password} {...register('password')} />
-        </Stack>
-        <Button
-          type="submit"
-          mt="6"
-          colorScheme="pink"
-          size="lg"
-          isLoading={formState.isSubmitting}
+      <Box>
+        <Flex
+          as="form"
+          w="100%"
+          maxW={360}
+          bg="gray.800"
+          p="8"
+          borderRadius={8}
+          flexDir="column"
+          onSubmit={handleSubmit(handleSignIn)}
         >
-          Entrar
-        </Button>
-      </Flex>
+          <Stack spacing="4">
+            <Input name="email" type="email" label="E-mail" error={errors.email} {...register('email')} />
+            <Input name="password" type="password" label="Senha" error={errors.password} {...register('password')} />
+          </Stack>
+          <Button
+            type="submit"
+            mt="6"
+            colorScheme="pink"
+            size="lg"
+            isLoading={formState.isSubmitting}
+          >
+            Entrar
+          </Button>
+        </Flex>
+        <Flex
+          w="100%"
+          maxW={360}
+          bg="gray.800"
+          mt="4"
+          p="8"
+          borderRadius={8}
+          flexDir="column"
+        >
+          <Text>Se ainda não é cadastrado adicione um novo relógio.</Text>
+          <Button
+            type="button"
+            mt="6"
+            colorScheme="blue"
+            size="lg"
+            onClick={handleNewClock}
+          >
+            Novo relógio
+          </Button>
+        </Flex>
+      </Box>
     </Flex>
   )
 }
