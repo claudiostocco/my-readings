@@ -12,6 +12,7 @@ import { api } from "../services/api";
 import { queryClient } from "../services/queryClient";
 
 type NewClockFormData = {
+    title: string;
     clockNumber: number;
     clockAddress: string;
     name?: string
@@ -21,6 +22,7 @@ type NewClockFormData = {
   }
   
   const newClockFormSchema = yup.object().shape({
+    title: yup.string().required('Titulo é obrigatório!'),
     clockNumber: yup.number().required('Número do medidor é obrigatório e pode ser encontrado na sua conta de energia!'),
     clockAddress: yup.string().required('Endereço de ligação do medidor é obrogatório'),
     name: yup.string().required('Nome obrigatório!'),
@@ -73,12 +75,15 @@ type NewClockFormData = {
                     <Divider my="6" borderColor="gray.700" />
                     <VStack spacing="8">
                         <SimpleGrid minChildWidth="240px" spacing={["4","8"]} w="100%">
+                            <Input name="title" label="Titulo do medidor" error={errors.title} {...register('title')} />
                             <Input name="clockNumber" label="Número do medidor" error={errors.clockNumber} {...register('clockNumber')}/>
+                        </SimpleGrid>
+                        <SimpleGrid minChildWidth="240px" spacing={["4","8"]} w="100%">
                             <Input name="clockAddress" label="Endereço do medidor" error={errors.clockAddress} {...register('clockAddress')} />
                         </SimpleGrid>
                         <SimpleGrid minChildWidth="240px" spacing={["4","8"]} w="100%">
-                            <Input name="name" label="Nome completo" error={errors.name} {...register('name')}/>
                             <Input name="email" type="email" label="E-mail" error={errors.email} {...register('email')} />
+                            <Input name="name" label="Nome completo" error={errors.name} {...register('name')}/>
                         </SimpleGrid>
                         <SimpleGrid minChildWidth="240px" spacing={["4","8"]} w="100%">
                             <Input name="password" type="password" label="Senha" error={errors.password} {...register('password')} />

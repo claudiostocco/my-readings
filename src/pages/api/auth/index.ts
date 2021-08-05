@@ -8,9 +8,9 @@ seedUserStore();
 
 export default function auth(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
-        const { email, password } = req.body as CreateSessionDTO;
-        const user = users.get(email);
-      
+        const { username, email, password } = req.body as CreateSessionDTO;
+        const user = users.get(username || email);
+
         if (!user || password !== user.password) {
           res
             .status(401)
@@ -21,7 +21,7 @@ export default function auth(req: NextApiRequest, res: NextApiResponse) {
           return;
         }
       
-        const { token, refreshToken } = generateJwtAndRefreshToken(email, {
+        const { token, refreshToken } = generateJwtAndRefreshToken(username || email, {
           permissions: user.permissions,
         })
       
