@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Stack, Text, useToast } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -22,6 +22,7 @@ const signInFormSchema = yup.object().shape({
 export default function SignIn() {
   const { signIn, isAutenticated, messageError } = useContext(AuthContext);
   const router = useRouter();
+  const toast = useToast();
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(signInFormSchema)
   });
@@ -30,11 +31,12 @@ export default function SignIn() {
   const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
     await signIn(values);
     if (!isAutenticated) {
-      if (messageError) {
-        alert(messageError);
-      } else {
-        alert('Erroa na autenticação do usuário!');
-      }
+      toast({
+        title: 'Erro na autenticação',
+        description: messageError ?? 'Erro na autenticação do usuário!',
+        position: "top",
+        isClosable: true,
+      });
     }
   }
 

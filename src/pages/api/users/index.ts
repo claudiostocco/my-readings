@@ -30,6 +30,7 @@ export default async function user(req: NextApiRequest, res: NextApiResponse) {
         case 'GET': {
             const findKey = !!req.query.id ? { email: req.query.id } : {};
             const result = await find('users', findKey);
+            console.log('depois do find');
             if (result.success) {
                 res.status(200).json(result.searched);
             } else {
