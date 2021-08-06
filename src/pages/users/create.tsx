@@ -6,25 +6,20 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from "react-query";
 import { useRouter } from "next/router";
 
-import { Header } from "../components/Header";
-import { Input } from '../components/Form/Input'
-import { api } from "../services/api";
-import { queryClient } from "../services/queryClient";
+import { Header } from "../../components/Header";
+import { SideBar } from "../../components/SideBar";
+import { Input } from '../../components/Form/Input'
+import { api } from "../../services/api";
+import { queryClient } from "../../services/queryClient";
 
-type NewClockFormData = {
-    title: string;
-    clockNumber: number;
-    clockAddress: string;
-    name?: string
+type CreateUserFormData = {
+    name: string
     email: string
-    password?: string
-    password_confirmation?: string
+    password: string
+    password_confirmation: string
   }
   
-  const newClockFormSchema = yup.object().shape({
-    title: yup.string().required('Titulo é obrigatório!'),
-    clockNumber: yup.number().required('Número do medidor é obrigatório e pode ser encontrado na sua conta de energia!'),
-    clockAddress: yup.string().required('Endereço de ligação do medidor é obrogatório'),
+  const createUserFormSchema = yup.object().shape({
     name: yup.string().required('Nome obrigatório!'),
     email: yup.string().required('E-mail obrigatório!').email('E-mail inválido!'),
     password: yup.string().required('Senha obrigatória!'),
@@ -33,15 +28,15 @@ type NewClockFormData = {
     ], 'As senhas precisam ser iguais!')
   })
   
-  export default function NewClock() {
+  export default function UserCreate() {
     const router = useRouter();  
     const { formState, handleSubmit, register } = useForm({
-        resolver: yupResolver(newClockFormSchema)
+        resolver: yupResolver(createUserFormSchema)
     });
     const { errors } = formState;
-    const newClock = useMutation(async (user: NewClockFormData) => {
+    const createUser = useMutation(async (user: CreateUserFormData) => {
         try {
-            const response = await api.post('clock', {
+            const response = await api.post('user', {
                 user: {
                     ...user,
                     createdAt: new Date(),
@@ -53,14 +48,14 @@ type NewClockFormData = {
         }
     }, {
         onSuccess: () => {
-            queryClient.invalidateQueries('clocks');
+            queryClient.invalidateQueries('users');
         }
     })
 
-    const handleNewClock: SubmitHandler<NewClockFormData> = async (values) => {
-        await newClock.mutateAsync(values);
-        if (newClock.isSuccess) {
-            router.push('/');
+    const handleCreateUser: SubmitHandler<CreateUserFormData> = async (values) => {
+        await createUser.mutateAsync(values);
+        if (createUser.isSuccess) {
+            router.push('/users');
         } else {
             alert('Erro ao inserir usuário!');
         }
@@ -70,20 +65,14 @@ type NewClockFormData = {
         <Box>
             <Header />
             <Flex w="100%" my="6" maxW={1480} mx="auto" px={["4","6"]}>
-                <Box as="form" flex="1" borderRadius={8} bg="gray.800" p={["4","8"]} onSubmit={handleSubmit(handleNewClock)}>
-                    <Heading size="lg" fontWeight="normal">Criar relógio medidor</Heading>
+                <SideBar />
+                <Box as="form" flex="1" borderRadius={8} bg="gray.800" p={["4","8"]} onSubmit={handleSubmit(handleCreateUser)}>
+                    <Heading size="lg" fontWeight="normal">Criar usuários</Heading>
                     <Divider my="6" borderColor="gray.700" />
                     <VStack spacing="8">
                         <SimpleGrid minChildWidth="240px" spacing={["4","8"]} w="100%">
-                            <Input name="title" label="Titulo do medidor" error={errors.title} {...register('title')} />
-                            <Input name="clockNumber" label="Número do medidor" error={errors.clockNumber} {...register('clockNumber')}/>
-                        </SimpleGrid>
-                        <SimpleGrid minChildWidth="240px" spacing={["4","8"]} w="100%">
-                            <Input name="clockAddress" label="Endereço do medidor" error={errors.clockAddress} {...register('clockAddress')} />
-                        </SimpleGrid>
-                        <SimpleGrid minChildWidth="240px" spacing={["4","8"]} w="100%">
-                            <Input name="email" type="email" label="E-mail" error={errors.email} {...register('email')} />
                             <Input name="name" label="Nome completo" error={errors.name} {...register('name')}/>
+                            <Input name="email" type="email" label="E-mail" error={errors.email} {...register('email')} />
                         </SimpleGrid>
                         <SimpleGrid minChildWidth="240px" spacing={["4","8"]} w="100%">
                             <Input name="password" type="password" label="Senha" error={errors.password} {...register('password')} />
@@ -92,7 +81,7 @@ type NewClockFormData = {
                     </VStack>
                     <Flex mt="8" justify="flex-end">
                         <HStack spacing="4">
-                            <Link href="/" passHref>
+                            <Link href="/users" passHref>
                                 <Button as="a" colorScheme="whiteAlpha">Cancelar</Button>
                             </Link>
                             <Button type="submit" colorScheme="pink" isLoading={formState.isSubmitting}>Salvar</Button>

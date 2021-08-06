@@ -5,10 +5,10 @@ export async function find(collection: string, findKey: {}) {
       console.log(findKey);
       const { db, client } = await connectToDatabase();
       if (client) {
-         console.log('conectado');
-         const searched = await db.collection(collection).find(findKey);
+         const cursor = await db.collection(collection).find(findKey);
+         const searched = await cursor.next();
          console.log(searched);
-         if (!searched) {
+         if (searched) {
             return { success: true, searched };
          } else {
             return { success: false, searched: null };

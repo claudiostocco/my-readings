@@ -2,14 +2,13 @@ export type UserData = {
     name: string;
     email: string;
     password: string;
-    password_confirmation: string;
     createdAt?: Date;
 }
 
-export type MeasureClockData = {
+export type MeasurerData = {
     title: string;
-    clockNumber: number;
-    clockAddress: string;
-    email: string
+    number: number;
+    installationAddress: string;
+    email: string[];
     createdAt?: Date;
 }

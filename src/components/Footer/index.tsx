@@ -33,7 +33,7 @@ export function Footer() {
             px="6"
             align="center"
         >
-            <UserCan permissions={['metrics.list']} >
+            <UserCan permissions={[]} >
                 <Text
                     align="center"
                     mx="auto"
@@ -42,7 +42,7 @@ export function Footer() {
                 </Text>
             </UserCan>
 
-            <UserCan permissions={['metrics.list']}>
+            <UserCan permissions={[]}>
                 <Text
                     align="center"
                     mx="auto"

@@ -1,34 +1,32 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
+import { find } from "@/src/services/database/find";
 import { generateJwtAndRefreshToken } from "../../../services/jwt/auth";
-import { seedUserStore, users } from "../../../services/jwt/database";
 import { CreateSessionDTO } from "../../../services/jwt/types";
 
-seedUserStore();
-
-export default function auth(req: NextApiRequest, res: NextApiResponse) {
+export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         const { username, email, password } = req.body as CreateSessionDTO;
-        const user = users.get(username || email);
+        const {success, searched} = await find('users', {email: username || email});
 
-        if (!user || password !== user.password) {
+        if (!searched || password !== searched.password) {
           res
             .status(401)
             .json({ 
               error: true, 
-              message: 'E-mail or password incorrect.'
+              message: 'E-mail ou senha incorretos!'
             });
           return;
         }
       
         const { token, refreshToken } = generateJwtAndRefreshToken(username || email, {
-          permissions: user.permissions,
+          permissions: null,
         })
       
         res.json({
           token,
           refreshToken,
-          permissions: user.permissions,
+          permissions: null,
         });      
     } else {
         res.setHeader('Allow','POST');

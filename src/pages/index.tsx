@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Stack, Text, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, Stack, Text, useToast } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -41,7 +41,7 @@ export default function SignIn() {
   }
 
   const handleNewClock = () => {
-    router.push('/newClock');
+    router.push('/measurers/form');
   }
 
   return (
