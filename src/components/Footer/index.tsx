@@ -51,7 +51,7 @@ export function Footer() {
                 </Text>
             </UserCan>
 
-            <button onClick={signOut}>Logout</button>
+            {/* <button onClick={signOut}>Logout</button> */}
         </Flex>
     )
 }

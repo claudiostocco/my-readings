@@ -40,7 +40,7 @@ export default function SignIn() {
     }
   }
 
-  const handleNewClock = () => {
+  const handleNewMeasurer = () => {
     router.push('/measurers/form');
   }
 
@@ -85,15 +85,15 @@ export default function SignIn() {
           borderRadius={8}
           flexDir="column"
         >
-          <Text>Se ainda não é cadastrado adicione um novo relógio.</Text>
+          <Text>Se ainda não é cadastrado adicione um novo medidor.</Text>
           <Button
             type="button"
             mt="6"
             colorScheme="blue"
             size="lg"
-            onClick={handleNewClock}
+            onClick={handleNewMeasurer}
           >
-            Novo relógio
+            Novo medidor
           </Button>
         </Flex>
       </Box>

@@ -44,7 +44,8 @@ export const AuthContext = createContext({} as AuthContextData);
 export function AuthProvider({ children }: AuthProviderProps) {
     const [ user, setUser ] = useState<User>();
     const [ messageError, setMessageError ] = useState('');
-    const isAutenticated = !!user;
+    const [ isAutenticated, setIsAutenticated ] = useState(!!user);
+
     useEffect(() => {
         authChannel = new BroadcastChannel('auth');
 
@@ -86,6 +87,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             const { permissions, refreshToken, token } = response.data;
             setUser({ email, permissions });
             setMessageError('');
+            setIsAutenticated(true);
             console.log('ok');
 
             setCookie(undefined,'myreadings.token',token,{
