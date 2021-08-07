@@ -78,6 +78,7 @@ export default function UserList() {
                                     </Tr>
                                 </Thead>
                                 <Tbody>
+                                    {console.log(data)}
                                     {data.usersData.map(user => (
                                         <Tr key={user.id}>
                                             <Td px={["2","4","6"]}>
@@ -121,11 +122,12 @@ export default function UserList() {
     )
 }
 
-// export const getServerSideProps: GetServerSideProps = async () => {
-//    const users = await getUsers(1);
-//     return {
-//         props: {
-//             users
-//         }
-//     }
-// }
+export const getServerSideProps: GetServerSideProps = async () => {
+   const users = await getUsers(1);
+   console.log('users: ', users);
+    return {
+        props: {
+            users
+        }
+    }
+}

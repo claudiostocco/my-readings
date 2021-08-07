@@ -15,7 +15,7 @@ type SignInCredentials = {
 }
 
 type AuthContextData = {
-    signIn(credentials: SignInCredentials): Promise<void>;
+    signIn(credentials: SignInCredentials): Promise<boolean>;
     signOut: () => void;
     isAutenticated: boolean;
     user: User;
@@ -31,7 +31,6 @@ let authChannel: BroadcastChannel;
 export function signOut() {
     destroyCookie(undefined, 'myreadings.token');
     destroyCookie(undefined, 'myreadings.refreshToken');
-
     
     if (process.browser) {
         authChannel.postMessage('signOut');
@@ -44,7 +43,7 @@ export const AuthContext = createContext({} as AuthContextData);
 export function AuthProvider({ children }: AuthProviderProps) {
     const [ user, setUser ] = useState<User>();
     const [ messageError, setMessageError ] = useState('');
-    const [ isAutenticated, setIsAutenticated ] = useState(!!user);
+    const isAutenticated = !!user;
 
     useEffect(() => {
         authChannel = new BroadcastChannel('auth');
@@ -64,7 +63,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const { 'myreadings.token': token } = parseCookies();
         if (token) {
             try {
-                apiAuth.get('/me')
+                apiAuth.get('/auth/me')
                     .then(response => {
                         const { email, permissions } = response.data;
                         setUser({ email, permissions });
@@ -87,8 +86,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
             const { permissions, refreshToken, token } = response.data;
             setUser({ email, permissions });
             setMessageError('');
-            setIsAutenticated(true);
-            console.log('ok');
 
             setCookie(undefined,'myreadings.token',token,{
                 maxAge: 12 * 60 * 60, // 24 hous
@@ -100,15 +97,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
             });
 
             apiAuth.defaults.headers['Authorization'] = `Bearer ${token}`;
-            console.log('ok - push');
-            Router.push('/dashboard');
+            
+            return true;
         } catch (error) {
             setUser(null);
-            console.log(error.response.data);
-            if (error.response.status === 401) {
-                console.log('error.response.data.message:', error.response.data.message);
-                setMessageError(error.response.data.message);
+            if (error.response?.data) {
+                if (error.response.status === 401) {
+                    console.log('error.response.data.message:', error.response.data.message);
+                    setMessageError(error.response.data.message);
+                }
             }
+            return false;
         }
     }
 

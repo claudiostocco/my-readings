@@ -9,7 +9,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         const { username, email, password } = req.body as CreateSessionDTO;
         const {success, searched} = await find('users', {email: username || email});
 
-        if (!searched || password !== searched.password) {
+        if (!searched || password !== searched[0].password) {
           res
             .status(401)
             .json({ 

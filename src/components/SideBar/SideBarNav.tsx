@@ -31,7 +31,7 @@ export function SideBarNav() {
                 <NavLink href="/automation" icon={RiGitMergeLine}>Leituras</NavLink>
             </NavSection>
             <NavSection title="">
-                <NavLink href="##" onClick={signOut} icon={RiLogoutCircleLine}>Logout</NavLink>
+                <NavLink href="#" onClick={signOut} icon={RiLogoutCircleLine}>Logout</NavLink>
                 {/* <button onClick={signOut}>Logout</button> */}
             </NavSection>
         </Stack>

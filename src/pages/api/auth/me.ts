@@ -15,7 +15,7 @@ const me = async (request: NextApiRequest, response: NextApiResponse, email: str
 
     return response.json({
       email,
-      name: searched.name,
+      name: searched[0].name,
       permissions: null,
     })
   } else {

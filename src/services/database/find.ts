@@ -2,12 +2,10 @@ import { connectToDatabase } from "./mongodb";
 
 export async function find(collection: string, findKey: {}) {
    try {
-      console.log(findKey);
       const { db, client } = await connectToDatabase();
       if (client) {
          const cursor = await db.collection(collection).find(findKey);
-         const searched = await cursor.next();
-         console.log(searched);
+         const searched = await cursor.toArray();
          if (searched) {
             return { success: true, searched };
          } else {

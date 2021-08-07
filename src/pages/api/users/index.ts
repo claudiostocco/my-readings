@@ -4,7 +4,6 @@ import { UserData } from "@/src/services/database/types";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function user(req: NextApiRequest, res: NextApiResponse) {
-    console.log(req.method);
     switch (req.method) {
         case 'POST': {
             if (req.body) {
@@ -31,8 +30,8 @@ export default async function user(req: NextApiRequest, res: NextApiResponse) {
         case 'GET': {
             const findKey = !!req.query.id ? { email: req.query.id } : {};
             const result = await find('users', findKey);
-            console.log('depois do find', result);
             if (result.success) {
+                res.setHeader('x-total-count', result.searched.length);
                 res.status(200).json(result.searched);
             } else {
                 if (result.error) {

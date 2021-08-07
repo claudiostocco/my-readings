@@ -20,7 +20,7 @@ const signInFormSchema = yup.object().shape({
 })
 
 export default function SignIn() {
-  const { signIn, isAutenticated, messageError } = useContext(AuthContext);
+  const { signIn, messageError } = useContext(AuthContext);
   const router = useRouter();
   const toast = useToast();
   const { register, handleSubmit, formState } = useForm({
@@ -29,8 +29,10 @@ export default function SignIn() {
   const { errors } = formState;
 
   const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
-    await signIn(values);
-    if (!isAutenticated) {
+    const isAutenticated = await signIn(values);
+    if (isAutenticated) {
+      router.push('/dashboard');
+    } else {
       toast({
         title: 'Erro na autenticação',
         description: messageError ?? 'Erro na autenticação do usuário!',
