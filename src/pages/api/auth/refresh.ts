@@ -1,14 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
+
+import { find } from "@/src/services/database/find";
 import { generateJwtAndRefreshToken } from "../../../services/jwt/auth";
-import { checkRefreshTokenIsValid, invalidateRefreshToken, users } from "../../../services/jwt/database";
+import { checkRefreshTokenIsValid, invalidateRefreshToken } from "../../../services/jwt/database";
 import { addUserInformationToRequest } from "../../../services/jwt/middlewares";
 
-const refresh = (req: NextApiRequest, res: NextApiResponse, email: string) => {
+const refresh = async (req: NextApiRequest, res: NextApiResponse, email: string) => {
     const { refreshToken } = req.body;
-  
-    const user = users.get(email);
-  
-    if (!user) {
+    const { success, searched } = await find('users', { email: email });
+
+    if (!searched) {
       res
         .status(401)
         .json({ 
@@ -34,13 +35,13 @@ const refresh = (req: NextApiRequest, res: NextApiResponse, email: string) => {
     invalidateRefreshToken(email, refreshToken);
   
     const { token, refreshToken: newRefreshToken } = generateJwtAndRefreshToken(email, {
-      permissions: user.permissions,
+      permissions: searched.permissions,
     });
   
     res.json({
       token,
       refreshToken: newRefreshToken,
-      permissions: user.permissions,
+      permissions: searched.permissions,
     });  
 }
 

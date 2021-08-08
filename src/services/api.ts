@@ -30,7 +30,7 @@ export function setupAPIClient(ctx = undefined) {
 
                     if (!isRefreshing) {
                         isRefreshing = true;
-                        apiAuth.post('/refresh', { refreshToken })
+                        apiAuth.post('/auth/refresh', { refreshToken })
                             .then(response => {
                                 // console.log(response);
                                 const { refreshToken: newRefreshToken, token } = response.data;

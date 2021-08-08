@@ -1,4 +1,5 @@
 export type UserData = {
+    id?: string;
     name: string;
     email: string;
     password: string;
@@ -6,6 +7,7 @@ export type UserData = {
 }
 
 export type MeasurerData = {
+    id?: string;
     title: string;
     number: number;
     installationAddress: string;
